@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../user.service';
+import { FormGroup,  FormBuilder,  Validators } from '@angular/forms';
 import { User } from '../user';
-
+import { HttpResponse, HttpHeaders, HttpClient} from '@angular/common/http';
+import { ActivatedRoute, Router } from '@angular/router';
 
 
 
@@ -11,27 +13,31 @@ import { User } from '../user';
   styleUrls: ['./registration.component.css']
 })
 export class RegistrationComponent implements OnInit {
+  user: User;
+  
+  constructor(private httpClient:HttpClient) {
+    this.createForm();
+  }
 
-  posts: User;
+  createForm() {
+    this.user = this.user.group({
+      first_name: ['', Validators.required ],
+      last_name: ['', Validators.required ],
+      gender: ['', Validators.required ],
+      email: ['', Validators.required ],
+      phone_no: ['', Validators.required ],
+      password: ['', Validators.required ]
+    });
+  }
 
-  error:string;
+  addUser(first_name, last_name, gender, email,phone_no, password) {
+    this.addUser(first_name, last_name, gender, email, phone_no,password);
+  }
 
-  user =new User();
-  constructor( private userservice: UserService) { }
 
   ngOnInit() {
-    return this.userservice.getUser().subscribe(
-      (data:User) => this.user =data,
-      error => this.error =error
-    );
+   
 
   }
-  onSubmit(){
-
-    return this.userservice.createPost(this.user).subscribe(
-      data => this.user.push(data),
-      error => this.error =error
-    );
-  }
-
+  
 }
